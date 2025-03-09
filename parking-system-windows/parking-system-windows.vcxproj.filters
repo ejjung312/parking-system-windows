@@ -20,6 +20,9 @@
     <ClInclude Include="centroidtracker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="common_functions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,6 +36,9 @@
     </ClCompile>
     <ClCompile Include="debug.h">
       <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="common_functions.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

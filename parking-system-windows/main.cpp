@@ -3,24 +3,9 @@
 
 #include "yolo.h"
 #include "centroidtracker.h"
+#include "common_functions.h"
 
 std::set<int> vehicles = { 2, 3, 5, 7 }; // 차량 클래스 ID 목록
-
-#include <iostream>
-#include <windows.h>
-#include <string>
-#include <fstream>
-
-std::string GetResourcePath(const std::string& filename) {
-    char path[MAX_PATH] = { 0 };
-    GetModuleFileNameA(NULL, path, MAX_PATH);
-
-    std::string dirPath(path);
-    size_t pos = dirPath.find_last_of("\\/");
-    dirPath = (pos != std::string::npos) ? dirPath.substr(0, pos) : dirPath;
-
-    return dirPath + "\\" + filename;
-}
 
 int main() {
     std::string car_model_path = GetResourcePath("yolo11n.onnx");

@@ -142,10 +142,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="centroidtracker.h" />
+    <ClInclude Include="common_functions.h" />
     <ClInclude Include="yolo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="centroidtracker.cpp" />
+    <ClCompile Include="common_functions.cpp" />
     <ClCompile Include="debug.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="yolo.cpp" />

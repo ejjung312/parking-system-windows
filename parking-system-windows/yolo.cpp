@@ -119,10 +119,10 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
             class_names_[class_id],
             class_id,
             max_conf,
-            output.at<float>(0, idx1),
-            output.at<float>(1, idx1),
-            output.at<float>(2, idx1),
-            output.at<float>(3, idx1),
+            output.at<float>(0, idx1), // cx
+            output.at<float>(1, idx1), // cy
+            output.at<float>(2, idx1), // w
+            output.at<float>(3, idx1), // h
             scale.x,
             scale.y);
         valid_boxes.push_back(bbox1);
@@ -135,10 +135,10 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
                 class_names_[class_id],
                 class_id,
                 output.at<float>(4 + class_id, idx2),
-                output.at<float>(0, idx2),
-                output.at<float>(1, idx2),
-                output.at<float>(2, idx2),
-                output.at<float>(3, idx2),
+                output.at<float>(0, idx2), // cx
+                output.at<float>(1, idx2), // cy
+                output.at<float>(2, idx2), // w
+                output.at<float>(3, idx2), // h
                 scale.x,
                 scale.y);
 

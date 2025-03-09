@@ -21,9 +21,9 @@ int main() {
 
     /*int width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
     int height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
-    double fps = cap.get(cv::CAP_PROP_FPS);
+    double fps = cap.get(cv::CAP_PROP_FPS);*/
 
-    cv::VideoWriter writer(output_path, cv::VideoWriter::fourcc('m', 'p', '4', 'v'), fps, cv::Size(width, height));
+    /*cv::VideoWriter writer(output_path, cv::VideoWriter::fourcc('m', 'p', '4', 'v'), fps, cv::Size(width, height));
     assert(writer.isOpened() && "Error: Cannot open output video file");*/
 
     Yolo11 car_model(car_model_path, 0.25f, 0.25f,
@@ -40,26 +40,19 @@ int main() {
     {
         std::vector<ObjectBBox> bbox_1 = car_model.detect(frame);
 
-        //std::vector<ObjectBBox> detections_;
-        std::vector<std::vector<int>> boxes;
-        //std::vector<ObjectBBox> boxes;
+        std::vector<ObjectBBox> boxes;
         for (auto& bbox : bbox_1)
         {
-            // bbox.label, bbox.conf, bbox.x1, bbox.y1, bbox.x2, bbox.y2
             if (vehicles.find(bbox.class_id) != vehicles.end())
             {
-                //detections_.push_back(bbox);
-
-                //boxes.insert(boxes.end(), { xLeftTop, yLeftTop, xRightBottom, yRightBottom });
-                boxes.insert(boxes.end(), { static_cast<int>(bbox.x1), static_cast<int>(bbox.y1), static_cast<int>(bbox.x2), static_cast<int>(bbox.y2) });
-                //boxes.insert(boxes.end(), bbox);
+                boxes.insert(boxes.end(), bbox);
             }
 
             /*std::cout << "Label:" << bbox.label << " Conf: " << bbox.conf;
             std::cout << "(" << bbox.x1 << ", " << bbox.y1 << ") ";
             std::cout << "(" << bbox.x2 << ", " << bbox.y2 << ")" << std::endl;*/
             
-            // bbox.draw(frame);
+            bbox.draw(frame, cv::Scalar(0, 255, 0));
         }
 
         // track vehicles
@@ -75,21 +68,9 @@ int main() {
                 std::cout << "(" << bbox.x1 << ", " << bbox.y1 << ") ";
                 std::cout << "(" << bbox.x2 << ", " << bbox.y2 << ")" << std::endl;
                 
-                bbox.draw(frame);
+                bbox.draw(frame, cv::Scalar(255, 255, 0));
             }
         }
-
-        // object tracking
-        /*if (!objects.empty())
-        {
-            for (auto obj : objects)
-            {
-                cv::circle(frame, cv::Point(obj.second.first, obj.second.second), 4, cv::Scalar(255, 0, 0), -1);
-                std::string ID = std::to_string(obj.first);
-                cv::putText(frame, ID, cv::Point(obj.second.first - 10, obj.second.second - 10), 
-                    cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
-            }
-        }*/
 
         cv::imshow("result", frame);
         //writer.write(frame);

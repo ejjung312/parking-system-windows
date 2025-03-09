@@ -46,13 +46,13 @@ int main() {
             if (vehicles.find(bbox.class_id) != vehicles.end())
             {
                 boxes.insert(boxes.end(), bbox);
+
+                bbox.draw(frame, cv::Scalar(0, 255, 0));
             }
 
             /*std::cout << "Label:" << bbox.label << " Conf: " << bbox.conf;
             std::cout << "(" << bbox.x1 << ", " << bbox.y1 << ") ";
             std::cout << "(" << bbox.x2 << ", " << bbox.y2 << ")" << std::endl;*/
-            
-            bbox.draw(frame, cv::Scalar(0, 255, 0));
         }
 
         // track vehicles

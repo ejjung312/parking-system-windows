@@ -1,10 +1,5 @@
 #pragma once
 
-#ifndef C___CENTROIDTRACKER_H
-#define C___CENTROIDTRACKER_H
-
-#endif //C___CENTROIDTRACKER_H
-
 #include <iostream>
 #include <vector>
 #include <map>
@@ -17,11 +12,11 @@
 
 class CentroidTracker {
 public:
+    // 묵시적 형변환 막기
     explicit CentroidTracker(int maxDisappeared);
 
     void register_Object(int cX, int cY);
 
-    std::vector<std::pair<int, std::pair<int, int>>> update_old(std::vector<std::vector<int>> boxes);
     std::vector<std::pair<int, std::pair<int, int>>> update(std::vector<ObjectBBox> boxes);
 
     // <ID, centroids>

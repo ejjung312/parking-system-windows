@@ -2,22 +2,9 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn/dnn.hpp>
-
 #include <string>
 
-class ObjectBBox {
-public:
-    std::string label;
-    int class_id;
-    float conf;
-    cv::Rect rect;
-    float x1, x2, y1, y2;
-
-    ObjectBBox(const std::string& lbl, int class_id, float conf, float cx, float cy, float w, float h, float scale_x, float scale_y);
-    cv::Mat draw(cv::Mat& img) const; // 클래스 멤버 변수 수정불가
-};
-
-float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2);
+#include "objectbbox.h"
 
 class Yolo11 {
 public:

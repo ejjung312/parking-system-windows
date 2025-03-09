@@ -42,6 +42,7 @@ int main() {
 
         //std::vector<ObjectBBox> detections_;
         std::vector<std::vector<int>> boxes;
+        //std::vector<ObjectBBox> boxes;
         for (auto& bbox : bbox_1)
         {
             // bbox.label, bbox.conf, bbox.x1, bbox.y1, bbox.x2, bbox.y2
@@ -49,9 +50,9 @@ int main() {
             {
                 //detections_.push_back(bbox);
 
-                // boxes.insert(boxes.end(), { xLeftTop, yLeftTop, xRightBottom, yRightBottom });
-                boxes.insert(boxes.end(), { static_cast<int>(bbox.x1), static_cast<int>(bbox.y1),
-                                           static_cast<int>(bbox.x2), static_cast<int>(bbox.y2) });
+                //boxes.insert(boxes.end(), { xLeftTop, yLeftTop, xRightBottom, yRightBottom });
+                boxes.insert(boxes.end(), { static_cast<int>(bbox.x1), static_cast<int>(bbox.y1), static_cast<int>(bbox.x2), static_cast<int>(bbox.y2) });
+                //boxes.insert(boxes.end(), bbox);
             }
 
             /*std::cout << "Label:" << bbox.label << " Conf: " << bbox.conf;
@@ -74,7 +75,7 @@ int main() {
                 std::cout << "(" << bbox.x1 << ", " << bbox.y1 << ") ";
                 std::cout << "(" << bbox.x2 << ", " << bbox.y2 << ")" << std::endl;
                 
-                 bbox.draw(frame);
+                bbox.draw(frame);
             }
         }
 

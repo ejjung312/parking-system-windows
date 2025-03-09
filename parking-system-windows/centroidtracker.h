@@ -1,9 +1,5 @@
 #pragma once
 
-/*
-Created by pratheek on 2019-11-27.
-*/
-
 #ifndef C___CENTROIDTRACKER_H
 #define C___CENTROIDTRACKER_H
 
@@ -15,6 +11,9 @@ Created by pratheek on 2019-11-27.
 #include <cmath>
 #include <set>
 #include <algorithm>
+#include <iterator>
+
+#include "objectbbox.h"
 
 class CentroidTracker {
 public:

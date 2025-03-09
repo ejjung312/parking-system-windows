@@ -1,38 +1,8 @@
 #include "yolo.h"
 #include "debug.h"
+#include "common_functions.h"
 
 #include <fstream>
-
-ObjectBBox::ObjectBBox(const std::string& lbl, int class_id, float conf_, float cx, float cy, float w, float h, float scale_x, float scale_y) : label(lbl), class_id(class_id), conf(conf_) {
-    x1 = (cx - w / 2) * scale_x;
-    y1 = (cy - h / 2) * scale_y;
-    x2 = (cx + w / 2) * scale_x;
-    y2 = (cy + h / 2) * scale_y;
-
-    rect = cv::Rect(cv::Point(x1, y1), cv::Point(x2, y2));
-}
-
-cv::Mat ObjectBBox::draw(cv::Mat& img) const {
-    cv::rectangle(img, rect, cv::Scalar(0, 255, 0), 2);
-    cv::putText(img, label + " " + std::to_string(conf).substr(0, 4),
-        cv::Point(rect.x, rect.y - 5),
-        cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
-
-    return img;
-}
-
-/**
- * IoU - 두 개의 영역(예측된 영역과 실제 영역)의 겹치는 정도를 나타내며, 값이 클수록 정확도가 높음
- */
-float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2) {
-    auto intersection = box1.rect & box2.rect;
-    if (intersection.empty()) return 0.0f;
-
-    float intersection_area = intersection.area();
-    float union_area = box1.rect.area() + box2.rect.area() - intersection_area;
-
-    return intersection_area / union_area;
-}
 
 void Yolo11::loadClassNames(const std::string& names_file) {
     std::ifstream file(names_file);

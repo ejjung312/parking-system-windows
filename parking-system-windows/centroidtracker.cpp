@@ -1,5 +1,4 @@
 #include "centroidtracker.h"
-#include <iterator>
 
 using namespace std;
 
@@ -32,7 +31,7 @@ vector<float>::size_type findMin(const vector<float>& v, vector<float>::size_typ
     return (min);
 }
 
-std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(vector<vector<int>> boxes) {
+std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(std::vector<std::vector<int>> boxes) {
     if (boxes.empty()) {
         auto it = this->disappeared.begin();
         while (it != this->disappeared.end()) {

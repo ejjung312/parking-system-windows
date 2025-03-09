@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="centroidtracker.h" />
     <ClInclude Include="common_functions.h" />
+    <ClInclude Include="objectbbox.h" />
     <ClInclude Include="yolo.h" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClCompile Include="common_functions.cpp" />
     <ClCompile Include="debug.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="objectbbox.cpp" />
     <ClCompile Include="yolo.cpp" />
   </ItemGroup>
   <ItemGroup>

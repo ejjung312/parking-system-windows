@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{ce5caa52-a136-486e-9a50-51cecf48c6ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="yolo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="centroidtracker.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="centroidtracker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="yolo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\parking-system-cpp\resources\car2.mp4">
+      <Filter>resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\parking-system-cpp\resources\coco.names">
+      <Filter>resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\parking-system-cpp\resources\license_plate_best.onnx">
+      <Filter>resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\parking-system-cpp\resources\yolo11n.onnx">
+      <Filter>resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\parking-system-cpp\resources\license.names">
+      <Filter>resources</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+</Project>

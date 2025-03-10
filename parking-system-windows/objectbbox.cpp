@@ -12,9 +12,7 @@ ObjectBBox::ObjectBBox(const std::string& lbl, int class_id, float conf_, float 
 
 cv::Mat ObjectBBox::draw(cv::Mat& img, cv::Scalar color) const {
     cv::rectangle(img, rect, color, 2);
-    cv::putText(img, label + " " + std::to_string(conf).substr(0, 4),
-        cv::Point(rect.x, rect.y - 5),
-        cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 2);
+    cv::putText(img, label + " " + std::to_string(conf).substr(0, 4), cv::Point(rect.x, rect.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 2);
 
     return img;
 }

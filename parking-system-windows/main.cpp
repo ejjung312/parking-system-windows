@@ -5,6 +5,9 @@
 #include "centroidtracker.h"
 #include "common_functions.h"
 
+//#define CUDA_ACC
+#define OPENCL_ACC
+
 std::set<int> vehicles = { 2, 3, 5, 7 }; // 차량 클래스 ID 목록
 
 int main() {
@@ -43,8 +46,9 @@ int main() {
         std::vector<ObjectBBox> boxes;
         for (auto& bbox : bbox_1)
         {
-            if (vehicles.find(bbox.class_id) != vehicles.end())
+            if (vehicles.find(bbox.class_id) != vehicles.end()) // vehicles.end(): 탐색 실패. 존재하지 않음
             {
+                // 마지막 위치에 bbox 추가
                 boxes.insert(boxes.end(), bbox);
 
                 bbox.draw(frame, cv::Scalar(0, 255, 0));
@@ -59,7 +63,7 @@ int main() {
         auto objects = centroidTracker->update(boxes);
 
         if (!objects.empty()) {
-            // detect license plates
+            // 차번호판 감지
             std::vector<ObjectBBox> bbox_2 = license_model.detect(frame);
 
             for (auto& bbox : bbox_2)

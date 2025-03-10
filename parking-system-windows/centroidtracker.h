@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include <opencv2/dnn.hpp>
+
 #include "objectbbox.h"
 
 class CentroidTracker {

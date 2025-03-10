@@ -76,74 +76,73 @@ std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(std::ve
         return this->objects;
     }
 
-    // TODO - 여기서부터 분석
-    // initialize an array of input centroids for the current frame
+    // 바운딩박스 중심점 리스트
     vector<pair<int, int>> inputCentroids;
     for (auto b : boxes) {
-        /*int cX = int((b[0] + b[2]) / 2.0);
-        int cY = int((b[1] + b[3]) / 2.0);*/
         int cX = b.cx;
         int cY = b.cy;
+        // make_pair: std::pair<int, int> 생성
         inputCentroids.push_back(make_pair(cX, cY));
     }
 
-    //if we are currently not tracking any objects take the input centroids and register each of them
     if (this->objects.empty()) {
-        for (auto i : inputCentroids) {
+        // 트래킹중인 객체가 없다면 바운딩박스 중심점 리스트 추가
+        for (auto& i : inputCentroids) {
+            // i.first: pair<int, int>의 첫 번째 정수
+            // i.second: pair<int, int>의 두 번째 정수
             this->register_Object(i.first, i.second);
         }
-    }
-
-    // otherwise, there are currently tracking objects so we need to try to match the
-    // input centroids to existing object centroids
-    else {
+    } else {
+        // 트래킹중인 객체가 있다면
+        // 기존 객체와 신규 객체 매칭
         vector<int> objectIDs;
         vector<pair<int, int>> objectCentroids;
         for (auto object : this->objects) {
             objectIDs.push_back(object.first);
+            // object.second.first: pair의 pair의 첫번째 int
+            // object.second.second: pair의 pair의 두번째 int
             objectCentroids.push_back(make_pair(object.second.first, object.second.second));
         }
 
-        //        Calculate Distances
+        // 거리 계산
+        // Distances: 2D 거리 행렬로 각 기존 객체(행)와 새로운 객체(열) 간의 거리 정보 저장
         vector<vector<float>> Distances;
         for (int i = 0; i < objectCentroids.size(); ++i) {
             vector<float> temp_D;
+            // vector(inputCentroids)의 size()함수는 size_type 반환
+            // std::size_t(부호 없는 정수)로 정의되어 있어 음수 값이 없는 크기 표현에 적합
             for (vector<vector<int>>::size_type j = 0; j < inputCentroids.size(); ++j) {
-                double dist = calcDistance(objectCentroids[i].first, objectCentroids[i].second, inputCentroids[j].first,
-                    inputCentroids[j].second);
+                // 유클리디안 거리 계산
+                double dist = calcDistance(objectCentroids[i].first, objectCentroids[i].second, inputCentroids[j].first, inputCentroids[j].second);
 
                 temp_D.push_back(dist);
             }
             Distances.push_back(temp_D);
         }
 
-        // load rows and cols
-        vector<int> cols;
+        vector<int> cols; // Distances[i](i 번째 행)에서 가장 가까운 객체의 열(col) 인덱스
         vector<int> rows;
 
-        //find indices for cols
+        // 최솟값을 가진 인덱스 저장
         for (auto v : Distances) {
-            auto temp = findMin(v);
+            auto temp = findMin(v); // 각 행 v에서 최솟값을 가진 열(col) 인덱스 반환
             cols.push_back(temp);
         }
 
-        //rows calculation
-        //sort each mat row for rows calculation
+        // 오름차순 정렬 후 D_Copy에 저장
         vector<vector<float>> D_copy;
         for (auto v : Distances) {
             sort(v.begin(), v.end());
             D_copy.push_back(v);
         }
 
-        // use cols calc to find rows
-        // slice first elem of each column
         vector<pair<float, int>> temp_rows;
         int k = 0;
         for (auto i : D_copy) {
-            temp_rows.push_back(make_pair(i[0], k));
+            // i[0]: vector<vector<float>> 의 첫번째 요소인 float 값
+            temp_rows.push_back(make_pair(i[0], k)); // (최소 거리 값, 해당 행의 인덱스) 저장
             k++;
         }
-        //print sorted indices of temp_rows
         for (auto const& x : temp_rows) {
             rows.push_back(x.second);
         }
@@ -151,34 +150,36 @@ std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(std::ve
         set<int> usedRows;
         set<int> usedCols;
 
-        //loop over the combination of the (rows, columns) index tuples
         for (int i = 0; i < rows.size(); i++) {
-            //if we have already examined either the row or column value before, ignore it
+            // 이미 처리한 행 또는 열이면 건너뜀
             if (usedRows.count(rows[i]) || usedCols.count(cols[i])) { continue; }
-            //otherwise, grab the object ID for the current row, set its new centroid,
-            // and reset the disappeared counter
+            
+            // 현재 row 인덱스에 해당하는 object ID 가져오기
             int objectID = objectIDs[rows[i]];
+
+            // objects 배열에서 해당 object ID를 찾음
             for (int t = 0; t < this->objects.size(); t++) {
                 if (this->objects[t].first == objectID) {
-                    this->objects[t].second.first = inputCentroids[cols[i]].first;
-                    this->objects[t].second.second = inputCentroids[cols[i]].second;
+                    // 새로운 중심점으로 업데이트
+                    this->objects[t].second.first = inputCentroids[cols[i]].first; // cx
+                    this->objects[t].second.second = inputCentroids[cols[i]].second; // cy
                 }
             }
+            // 객체 사라짐 상태 초기화
             this->disappeared[objectID] = 0;
 
+            // 사용한 행과 열 추가
             usedRows.insert(rows[i]);
             usedCols.insert(cols[i]);
         }
 
-        // compute indexes we have NOT examined yet
+        // 매칭된 인덱스를 제외한 나머지 객체들의 인덱스 계산
         set<int> objRows;
         set<int> inpCols;
 
-        //D.shape[0]
         for (int i = 0; i < objectCentroids.size(); i++) {
             objRows.insert(i);
         }
-        //D.shape[1]
         for (int i = 0; i < inputCentroids.size(); i++) {
             inpCols.insert(i);
         }
@@ -186,15 +187,14 @@ std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(std::ve
         set<int> unusedRows;
         set<int> unusedCols;
 
-        set_difference(objRows.begin(), objRows.end(), usedRows.begin(), usedRows.end(),
-            inserter(unusedRows, unusedRows.begin()));
-        set_difference(inpCols.begin(), inpCols.end(), usedCols.begin(), usedCols.end(),
-            inserter(unusedCols, unusedCols.begin()));
+        // 아직 매칭되지 않은(검사되지 않은)행과 열을 찾음
+        // objRows - usedRows 연산을 수행하여 objRows 존재하지만 usedRows에는 없는 요소들을 unusedRows에 저장
+        set_difference(objRows.begin(), objRows.end(), usedRows.begin(), usedRows.end(), inserter(unusedRows, unusedRows.begin()));
+        set_difference(inpCols.begin(), inpCols.end(), usedCols.begin(), usedCols.end(), inserter(unusedCols, unusedCols.begin()));
 
 
-        //If objCentroids > InpCentroids, we need to check and see if some of these objects have potentially disappeared
+        // 기존객체 >= 신규객체 ==> 일부 객체가 사라졌을 가능성 있음
         if (objectCentroids.size() >= inputCentroids.size()) {
-            // loop over unused row indexes
             for (auto row : unusedRows) {
                 int objectID = objectIDs[row];
                 this->disappeared[objectID] += 1;
@@ -202,31 +202,30 @@ std::vector<std::pair<int, std::pair<int, int>>> CentroidTracker::update(std::ve
                 if (this->disappeared[objectID] > this->maxDisappeared) {
                     this->objects.erase(remove_if(this->objects.begin(), this->objects.end(), [objectID](auto& elem) {
                         return elem.first == objectID;
-                        }), this->objects.end());
+                    }), this->objects.end());
 
                     this->path_keeper.erase(objectID);
 
                     this->disappeared.erase(objectID);
                 }
             }
-        }
-        else {
+        } else {
+            // 기존객체 < 신규객체 ==> 기존 객체와 매칭되지 않은 새로운 객체 가능성
             for (auto col : unusedCols) {
                 this->register_Object(inputCentroids[col].first, inputCentroids[col].second);
             }
         }
     }
-    //loading path tracking points
-    if (!objects.empty()) {
-        for (auto obj : objects) {
 
+    if (!objects.empty()) {
+        // 객체의 이동 경로 저장
+        for (auto obj : objects) {
             if (path_keeper[obj.first].size() > 30) {
                 path_keeper[obj.first].erase(path_keeper[obj.first].begin());
             }
-            path_keeper[obj.first].push_back(make_pair(obj.second.first, obj.second.second));
+            path_keeper[obj.first].push_back(make_pair(obj.second.first, obj.second.second)); // cx, cy
         }
     }
-
 
     return this->objects;
 }
